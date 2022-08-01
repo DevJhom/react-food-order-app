@@ -38,7 +38,11 @@ const Checkout = props => {
             return;
         }
 
-        //Submit cart data here
+        props.onConfirm({
+            name: enteredName,
+            address: enteredAddress,
+            phone: enteredPhone
+        });
     };
 
     const classesForNameInput = `${classes.control} ${formInputsValidity.name ? '' : classes.invalid }`;
