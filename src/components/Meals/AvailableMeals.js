@@ -8,10 +8,16 @@ const AvailableMeals = () => {
 
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState();
 
   useEffect(() => {
     const fetchMeals = async () => {
       const res = await fetch('https://dummy-database-71242-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json');
+      
+      if (!res.ok){
+        throw new Error('Something went wrong!');
+      }
+      
       const data = await res.json();
 
       const loadedMeals = [];
@@ -27,12 +33,23 @@ const AvailableMeals = () => {
       setMeals(loadedMeals);
       setIsLoading(false);
     };
-    fetchMeals();
+
+      fetchMeals().catch(err => {
+        setIsLoading(false);
+        setError(err.message);
+      });
+
   }, []);
 
   if(isLoading) {
     return <section className={classes['meals-loading']}>
       <p>Loading...</p>
+    </section>
+  }
+
+  if(error) {
+    return <section className={classes['meals-error']}>
+        <p>{error}</p>
     </section>
   }
 
